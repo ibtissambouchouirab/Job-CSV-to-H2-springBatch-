@@ -1,0 +1,35 @@
+package com.example.SpringBatchCSV.processor;
+
+import com.example.SpringBatchCSV.entity.User;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
+
+@Component
+@Slf4j
+public class Processor implements ItemProcessor<User, User> {
+
+  private static final Map<String, String> DEPT_NAMES = new HashMap<>();
+
+  public Processor() {
+    DEPT_NAMES.put("001", "Technology");
+    DEPT_NAMES.put("002", "Operations");
+    DEPT_NAMES.put("003", "Accounts");
+  }
+
+  @Override
+  public User process(User user) throws Exception {
+    log.info("[START] process user to user");
+    String deptCode = user.getDept();
+    String dept = DEPT_NAMES.get(deptCode);
+    user.setDept(dept);
+
+    log.debug(String.format("Converted from [%s] to [%s]", deptCode, dept));
+
+    log.info("[END] process user to user");
+
+    return user;
+  }
+}
